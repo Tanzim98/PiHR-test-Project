@@ -1,0 +1,26 @@
+{
+  "name": "apiautomation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "clean:results": "rm -rf test-results && mkdir -p test-results",
+    "test": "npm run clean:results && npx playwright test",
+    "test:ci": "npm run clean:results && npx cross-env ENV=$ENV playwright test --grep @Business/Functional"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "allure-playwright": "^3.4.3",
+    "dotenv": "^17.2.3"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0",
+    "pdf-parse": "^2.4.5",
+    "playwright": "^1.57.0",
+    "playwright-core": "^1.57.0",
+    "qs": "^6.14.0"
+  },
+  "description": ""
+}

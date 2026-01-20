@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  e2e:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pihr-playwright:local
+    container_name: PIHR-e2e
+    working_dir: /app
+    ipc: host
+    shm_size: "2gb"
+    env_file:
+      - .env
+    environment:
+      CI: "true"
+      # Ensure allure-playwright writes results into the mounted folder
+      ALLURE_RESULTS_DIR: /app/allure-results
+    user: ${E2E_USER:-pwuser}
+    volumes:
+      - ./:/app:rw
+      - allure-results:/app/allure-results
+      - playwright-report:/app/playwright-report
+    command:
+      - sh
+      - -lc
+      - >
+        npx playwright test tests/Employee/employeeApi.spec.js --grep @GET_API_Test --reporter=line,allure-playwright
+
+  allure:
+    image: frankescobar/allure-docker-service:2.27.0
+    container_name: PIHR-allure
+    environment:
+      CHECK_RESULTS_EVERY_SECONDS: "3"
+      KEEP_HISTORY: "true"
+      KEEP_HISTORY_LATEST: "20"
+      ALLURE_RESULTS_DIRECTORY: /app/allure-results
+    volumes:
+      - allure-results:/app/allure-results
+      - allure-report:/app/allure-report
+      - allure-history:/app/allure-history
+    ports:
+      # Allure Docker Service API (inside container 5050)
+      - "5252:5050"
+      # Optional static report server (uncomment if you use it)
+      # - "4040:4040"
+
+  allure-ui:
+    image: frankescobar/allure-docker-service-ui:7.0.3
+    container_name: PIHR-allure-ui
+    depends_on:
+      - allure
+    environment:
+      # Browser (host) will access Allure API via host port 5252
+      ALLURE_DOCKER_PUBLIC_API_URL: "http://localhost:5252"
+      # UI container must call allure service via docker network (NOT localhost)
+      ALLURE_DOCKER_API_URL: "http://allure:5050"
+      PROJECT_ID: "default"
+    ports:
+      # UI container listens on 5252 internally; expose it on host 5253
+      - "5253:5252"
+
+volumes:
+  allure-results:
+  playwright-report:
+  allure-report:
+  allure-history:
