@@ -1,0 +1,22 @@
+{
+    "headers": {
+        "Content-Type": "application/json",
+        "Accept": "*/*",
+        "Authorization": "Bearer "
+    },
+    "payload": {
+        "department_code": "Test_001",
+        "name": "Test Department",
+        "description": "Test Department",
+        "status_id": 1
+    },
+    "putPayload": {
+        "department_code": "UpdatedTest_001",
+        "name": "Updated Test Department",
+        "description": "Updated Test Department",
+        "status_id": 0
+    },
+    "params": {
+        "department_code": "Test_001"
+    }
+}
