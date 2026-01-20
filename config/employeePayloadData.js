@@ -27,7 +27,7 @@ export const updateDivisionPayload = {
   company_division_id: "{{division}}",
 };
 
-// employee deparment unit payloads
+// employee deparment unit payloads zxc
 export const departmentUnitCreatePayload = {
   unit_name: "New QA Unit",
   status_id: 1,
